@@ -1,8 +1,8 @@
 public class TicTacToe {
-    private char[][] table;
     static final char PLAYERONE = 'X';
     static final char PLAYERTWO = 'O';
     static final int sizetable = 3;
+    private char[][] table;
     private int availableShifts;
     private boolean finished;
     private char winner;
@@ -12,10 +12,15 @@ public class TicTacToe {
         availableShifts = 0;
         winner = ' ';
         finished = false;
+        initializeTable();
     }
 
     public char[][] getTable() {
         return table;
+    }
+
+    public char getCell(int row, int col){
+        return table[row][col];
     }
 
     public int getAvailableShifts() {
@@ -23,48 +28,46 @@ public class TicTacToe {
     }
 
     public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
+        return isWinningPlay() || availableShifts == 0;
     }
 
     public char getWinner() {
         return winner;
     }
 
-    public void setWinner(char winner) {
-        this.winner = winner;
-    }
-
-    public boolean startGame(){
+    private void initializeTable(){
         for (int row = 0; row < table.length; row++) {
             for (int col = 0; col < table[row].length; col++) {
                 table[row][col] = ' ';
                 availableShifts++;
             }
         }
-        winner = ' ';
-        finished = false;
-        return availableShifts == 9;
     }
 
-    public void checkBox(int row, int col) {
-        if (table[row][col] == ' ' && !finished) {
-            table[row][col] = playerTurn();
-            setFinished(winningPlay());
-            if(isFinished()){
-                setWinner(playerTurn());
-            }
+    private boolean isValidMarkCell(int row, int col){
+        return table[row][col] == ' '  && !isFinished();
+    }
+
+    public boolean markCell(int row, int col) {
+        boolean marked;
+        char player;
+        marked = false;
+        player = playerTurn();
+
+        if (isValidMarkCell(row, col)) {
+            table[row][col] = player;
+            marked = true;
             availableShifts--;
-            if (availableShifts == 0) {
-                setFinished(true);
+            if(isFinished()) {
+                if (isWinningPlay()) {
+                    winner = player;
+                }
             }
         }
+        return marked;
     }
 
-    private boolean winningPlayVertical() {
+    private boolean isWinningPlayVertical() {
         for (int col = 0; col < table.length; col++) {
             if (table[0][col] == table[1][col] && table[2][col] == table[1][col]) {
                 if (table[0][col] == PLAYERONE || table[0][col] == PLAYERTWO) {
@@ -75,7 +78,7 @@ public class TicTacToe {
         return false;
     }
 
-    private boolean winningPlayHorizontal() {
+    private boolean isWinningPlayHorizontal() {
         for (int row = 0; row < table.length; row++) {
             if (table[row][0] == table[row][1] && table[row][2] == table[row][1]) {
                 if (table[row][0] == PLAYERONE || table[row][0] == PLAYERTWO) {
@@ -86,23 +89,23 @@ public class TicTacToe {
         return false;
     }
 
-    private boolean winningPlayUpperDiagonal() {
+    private boolean isWinningPlayUpperDiagonal() {
         boolean diagonal = table[0][0] == table[1][1] && table[1][1] == table[2][2];
         boolean players = table[0][0] == PLAYERONE || table[0][0] == PLAYERTWO;
         return diagonal && players;
     }
 
-    private boolean winningPlayBottomDiagonal() {
+    private boolean isWinningPlayBottomDiagonal() {
         boolean diagonal = table[0][2] == table[1][1] && table[1][1] == table[2][0];
         boolean players = table[2][0] == PLAYERONE || table[2][0] == PLAYERTWO;
         return diagonal && players;
     }
 
-    private boolean winningPlay() {
-        return winningPlayVertical() || winningPlayHorizontal() || winningPlayUpperDiagonal() || winningPlayBottomDiagonal();
+    public boolean isWinningPlay() {
+        return isWinningPlayVertical() || isWinningPlayHorizontal() || isWinningPlayUpperDiagonal() || isWinningPlayBottomDiagonal();
     }
 
-    private char playerTurn() {
+    public char playerTurn() {
         return availableShifts % 2 == 1 ? PLAYERONE : PLAYERTWO;
     }
 }

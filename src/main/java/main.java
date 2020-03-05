@@ -8,27 +8,23 @@ public class main {
         Random random = new Random();
 
 
-        if(ticTacToe.startGame()){
-            while (!ticTacToe.isFinished()){
-                row = random.nextInt(3);
-                col = random.nextInt(3);
-                ticTacToe.checkBox(row,col);
-            }
-            for (char[] eles: ticTacToe.getTable()) {
-                for (char ele: eles) {
-                    System.out.print(ele);
-                }
-                System.out.println();
-            }
-            System.out.printf("Available shitfs is %d%n", ticTacToe.getAvailableShifts());
-            char winner = ticTacToe.getWinner();
-            if(winner != ' '){
-                System.out.printf("Winner player %c%n", ticTacToe.getWinner());
-            } else {
-                System.out.println("tied!!");
-            }
-
+        while (!ticTacToe.isFinished()){
+            row = random.nextInt(3);
+            col = random.nextInt(3);
+            ticTacToe.markCell(row,col);
         }
-
+        for (char[] eles: ticTacToe.getTable()) {
+            for (char ele: eles) {
+                System.out.print(ele);
+            }
+            System.out.println();
+        }
+        System.out.printf("Available shitfs is %d%n", ticTacToe.getAvailableShifts());
+        char winner = ticTacToe.getWinner();
+        if(winner != ' '){
+            System.out.printf("Winner player %c%n", ticTacToe.getWinner());
+        } else {
+            System.out.println("tied!!");
+        }
     }
 }

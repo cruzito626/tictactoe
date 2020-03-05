@@ -1,8 +1,10 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+
 
 public class TicTacToeTest {
 
@@ -14,285 +16,112 @@ public class TicTacToeTest {
     }
 
     @Test
-    public void testStartGame() {
-        finished = false;
-        boolean startGame = true;
-
-        assertEquals(startGame, ticTacToe.startGame());
-        assertEquals(finished, ticTacToe.isFinished());
+    public void markCell_emptyCell_true() {
+        boolean marked;
+        marked = ticTacToe.markCell(1, 2);
+        assertTrue(marked);
     }
 
     @Test
-    public void testToCheckAnEmptyBoxOnAnEmptyBoard() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(1, 2);
-
-        char[][] tableAnswer = {{' ', ' ', ' '},
-                {' ', ' ', 'X'},
-                {' ', ' ', ' '}};
-        finished = false;
-
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+    public void markCell_markedCell_false() {
+        boolean marked;
+        ticTacToe.markCell(1, 2);
+        marked = ticTacToe.markCell(1, 2);
+        assertFalse(marked);
     }
 
     @Test
-    public void testToCheckAnEmptyBoxOnAPlayedBoard() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(1, 2);
-        ticTacToe.checkBox(1, 1);
+    public void markCell_winningGame_false() {
+        boolean marked;
 
-        finished = false;
-        char[][] tableAnswer = {{' ', ' ', ' '},
-                {' ', 'O', 'X'},
-                {' ', ' ', ' '}};
-
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(2, 0);
+        marked = ticTacToe.markCell(2, 1);
+        assertFalse(marked);
     }
 
     @Test
-    public void testNotToMarkAFullBoxOnAPlayedBoard() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(1, 2);
-        ticTacToe.checkBox(1, 2);
-
-        int availableShifts = 8;
-        finished = false;
-        char[][] tableAnswer = {{' ', ' ', ' '},
-                {' ', ' ', 'X'},
-                {' ', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+    public void isFinished_gameStarted_false() {
+        assertFalse(ticTacToe.isFinished());
     }
 
     @Test
-    public void testTiedGame() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(2, 2);
-        ticTacToe.checkBox(1, 2);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(0, 2);
-        ticTacToe.checkBox(2, 1);
-        ticTacToe.checkBox(0, 2);
-        int availableShifts = 0;
-        char winner = ' ';
-        finished = true;
-        char[][] tableAnswer = {{'X', 'O', 'O'},
-                {'O', 'X', 'X'},
-                {'X', 'X', 'O'}};
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-        assertEquals(winner, ticTacToe.getWinner());
+    public void isFinished_tiedGame_true() {
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(2, 2);
+        ticTacToe.markCell(1, 2);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(2, 0);
+        ticTacToe.markCell(0, 2);
+        ticTacToe.markCell(2, 1);
+        assertTrue(ticTacToe.isFinished());
     }
 
     @Test
-    public void testWonGameVerticalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(2, 0);
+    public void isFinished_wonGameVerticalLine_true() {
+        /*X|O|
+          X|O|
+          X| |
+        * */
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(2, 0);
 
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'O', ' '},
-                {'X', 'O', ' '},
-                {'X', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+        assertTrue(ticTacToe.isFinished());
     }
 
     @Test
-    public void testDoNotCheckBoxWonGameVerticalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(2, 1);
+    public void isFinished_wonGameHorizontalLine_true() {
+        /*X|X|X
+          O|O|
+           | |
+        * */
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(0, 2);
 
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'O', ' '},
-                {'X', 'O', ' '},
-                {'X', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+        assertTrue(ticTacToe.isFinished());
     }
 
     @Test
-    public void testWonGameHorizontalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 2);
+    public void isFinished_wonGameUpperDiagonalLine_true() {
+        /*X|O|
+          O|X|
+           | |X
+        * */
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(2, 2);
 
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'X', 'X'},
-                {'O', 'O', ' '},
-                {' ', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+        assertTrue(ticTacToe.isFinished());
     }
 
     @Test
-    public void testDoNotCheckBoxWonGameHorizontalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 2);
-        ticTacToe.checkBox(2, 1);
+    public void isFinished_wonGameBottomDiagonalLine_true() {
 
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'X', 'X'},
-                {'O', 'O', ' '},
-                {' ', ' ', ' '}};
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
+        /* |O|X
+          O|X|
+          X| |
+        * */
+
+        ticTacToe.markCell(2, 0);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(0, 2);
+
+        assertTrue(ticTacToe.isFinished());
     }
 
-    @Test
-    public void testWonGameUpperDiagonalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(2, 2);
-
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'O', ' '},
-                {'O', 'X', ' '},
-                {' ', ' ', 'X'}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-    }
-
-    @Test
-    public void testDoNotCheckBoxWonGameUpperDiagonalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(0, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(2, 2);
-        ticTacToe.checkBox(2, 1);
-
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{'X', 'O', ' '},
-                {'O', 'X', ' '},
-                {' ', ' ', 'X'}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-    }
-
-    @Test
-    public void testWonGameBottomDiagonalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(0, 2);
-
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{' ', 'O', 'X'},
-                {'O', 'X', ' '},
-                {'X', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-    }
-
-    @Test
-    public void testDoNotCheckBoxWonGameBottomDiagonalLine() {
-        ticTacToe.startGame();
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(1, 1);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(0, 2);
-
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{' ', 'O', 'X'},
-                {'O', 'X', ' '},
-                {'X', ' ', ' '}};
-
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-    }
-
-    @Test
-    public void testPlayerTwoWinnerWithHorizontalLine(){
-        ticTacToe.startGame();
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(0, 1);
-        ticTacToe.checkBox(1, 2);
-        ticTacToe.checkBox(0, 2);
-        ticTacToe.checkBox(1, 1);
-        char winner = 'O';
-        finished = true;
-        int availableShifts = 3;
-        char[][] tableAnswer = {{' ', 'X', 'X'},
-                {'O', 'O', 'O'},
-                {'X', ' ', ' '}};
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-        assertEquals(winner, ticTacToe.getWinner());
-    }
-    @Test
-    public void testPlayerOneWinnerWithHorizontalLine(){
-        ticTacToe.startGame();
-        ticTacToe.checkBox(2, 0);
-        ticTacToe.checkBox(1, 0);
-        ticTacToe.checkBox(2, 1);
-        ticTacToe.checkBox(1, 2);
-        ticTacToe.checkBox(2, 2);
-        ticTacToe.checkBox(1, 1);
-        char winner = 'X';
-        finished = true;
-        int availableShifts = 4;
-        char[][] tableAnswer = {{' ', ' ', ' '},
-                {'O', ' ', 'O'},
-                {'X', 'X', 'X'}};
-        assertEquals(availableShifts, ticTacToe.getAvailableShifts());
-        assertArrayEquals(tableAnswer, ticTacToe.getTable());
-        assertEquals(finished, ticTacToe.isFinished());
-        assertEquals(winner, ticTacToe.getWinner());
-    }
 }
