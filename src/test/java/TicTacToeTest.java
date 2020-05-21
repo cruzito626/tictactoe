@@ -5,11 +5,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
-
 public class TicTacToeTest {
 
     private TicTacToe ticTacToe;
-    private  boolean finished;
+
     @Before
     public void init() {
         ticTacToe = new TicTacToe();
@@ -17,30 +16,37 @@ public class TicTacToeTest {
 
     @Test
     public void markCell_emptyCell_true() {
-        boolean marked;
-        marked = ticTacToe.markCell(1, 2);
-        assertTrue(marked);
+        assertTrue(ticTacToe.markCell(1, 2));
     }
 
     @Test
     public void markCell_markedCell_false() {
-        boolean marked;
         ticTacToe.markCell(1, 2);
-        marked = ticTacToe.markCell(1, 2);
-        assertFalse(marked);
+        ticTacToe.markCell(1, 1);
+        assertFalse(ticTacToe.markCell(1, 2));
+    }
+
+    @Test
+    public void markCell_twoMarkedCells_false(){
+        ticTacToe.markCell(1, 2);
+        ticTacToe.markCell(0,2);
+        assertFalse(ticTacToe.markCell(1, 2));
     }
 
     @Test
     public void markCell_winningGame_false() {
-        boolean marked;
-
+        /*
+        X|O|
+        X|O|
+        X| |
+         */
         ticTacToe.markCell(0, 0);
         ticTacToe.markCell(0, 1);
         ticTacToe.markCell(1, 0);
         ticTacToe.markCell(1, 1);
         ticTacToe.markCell(2, 0);
-        marked = ticTacToe.markCell(2, 1);
-        assertFalse(marked);
+
+        assertFalse(ticTacToe.markCell(2, 1));
     }
 
     @Test
@@ -124,4 +130,84 @@ public class TicTacToeTest {
         assertTrue(ticTacToe.isFinished());
     }
 
+    @Test
+    public void playerTurn_firstTurn_X() {
+        assertEquals('X', ticTacToe.playerTurn());
+    }
+
+    @Test
+    public void playerTurn_secondTurn_O() {
+        ticTacToe.markCell(1, 2);
+        assertEquals('O', ticTacToe.playerTurn());
+    }
+
+    @Test
+    public void playerTurn_fifthTurn_X() {
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        assertEquals('X', ticTacToe.playerTurn());
+    }
+
+    @Test
+    public void getWinner_wonGameVerticalLine_X() {
+        /*X|O|
+          X|O|
+          X| |
+        * */
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(2, 0);
+
+        assertEquals('X', ticTacToe.getWinner());
+    }
+    @Test
+    public void getLoser_wonGameVerticalLine_O() {
+        /*X|O|
+          X|O|
+          X| |
+        * */
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(2, 0);
+
+        assertEquals('O', ticTacToe.getLoser());
+    }
+
+    @Test
+    public void getWinner_wonGameHorizontalLine_O() {
+        /*O|O|O
+          X|X|
+           | |X
+        * */
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(2, 2);
+        ticTacToe.markCell(0, 2);
+
+        assertEquals('O', ticTacToe.getWinner());
+    }
+
+    @Test
+    public void getLoser_wonGameHorizontalLine_X() {
+        /*O|O|O
+          X|X|
+           | |X
+        * */
+        ticTacToe.markCell(1, 0);
+        ticTacToe.markCell(0, 0);
+        ticTacToe.markCell(1, 1);
+        ticTacToe.markCell(0, 1);
+        ticTacToe.markCell(2, 2);
+        ticTacToe.markCell(0, 2);
+
+        assertEquals('X', ticTacToe.getLoser());
+    }
 }
