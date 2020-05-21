@@ -4,15 +4,15 @@ public class TicTacToe {
     private char lastPlayer;
     private char loser;
     private char winner;
-    static final int SIZE = 3;
-    private char[][] table;
+    private Board board;
     private int availableShifts;
     private boolean finished;
 
 
-    public TicTacToe() {
+    public TicTacToe(Board board) {
         this.firstPlayer = 'X';
         this.secondPlayer = 'O';
+        this.board = board;
         initializeGame();
     }
 
@@ -27,16 +27,11 @@ public class TicTacToe {
         loser = ' ';
         lastPlayer = ' ';
         finished = false;
-        availableShifts = 0;
+        availableShifts = 9;
+    }
 
-        table = new char[SIZE][SIZE];
-
-        for (int row = 0; row < table.length; row++) {
-            for (int col = 0; col < table[row].length; col++) {
-                table[row][col] = ' ';
-                availableShifts++;
-            }
-        }
+    public Board getBoard() {
+        return board;
     }
 
     public boolean isFinished() {
@@ -51,18 +46,14 @@ public class TicTacToe {
         return loser;
     }
 
-    private boolean isValidMarkCell(int row, int col){
-        return table[row][col] == ' ';
-    }
-
     public boolean markCell(int row, int col) {
         boolean marked;
         char player;
         marked = false;
         player = playerTurn();
 
-        if (isValidMarkCell(row, col) && !isFinished()) {
-            table[row][col] = player;
+        if (board.isValidMarkCell(row, col) && !isFinished()) {
+            board.markCell(row, col, player);
             availableShifts--;
             marked = true;
             if(isWinningPlay() || availableShifts == 0) {
@@ -74,14 +65,17 @@ public class TicTacToe {
             }
             lastPlayer = player;
         }
-        System.out.println(availableShifts);
         return marked;
     }
 
     private boolean isWinningPlayVertical() {
-        for (int col = 0; col < table.length; col++) {
-            if (table[0][col] == table[1][col] && table[2][col] == table[1][col]) {
-                if (table[0][col] == firstPlayer || table[0][col] == secondPlayer) {
+        for (int col = 0; col < board.SIZE; col++) {
+
+            if (board.getCell(0,col) == board.getCell(1,col) &&
+                    board.getCell(2,col)== board.getCell(1,col)) {
+
+                if (board.getCell(0,col) == firstPlayer ||
+                        board.getCell(0,col) == secondPlayer) {
                     return true;
                 }
             }
@@ -90,9 +84,11 @@ public class TicTacToe {
     }
 
     private boolean isWinningPlayHorizontal() {
-        for (int row = 0; row < table.length; row++) {
-            if (table[row][0] == table[row][1] && table[row][2] == table[row][1]) {
-                if (table[row][0] == firstPlayer || table[row][0] == secondPlayer) {
+        for (int row = 0; row < board.SIZE; row++) {
+            if (board.getCell(row,0) == board.getCell(row, 1) &&
+                    board.getCell(row, 2) == board.getCell(row, 1)) {
+                if (board.getCell(row,0) == firstPlayer ||
+                        board.getCell(row,0) == secondPlayer) {
                     return true;
                 }
             }
@@ -101,14 +97,17 @@ public class TicTacToe {
     }
 
     private boolean isWinningPlayUpperDiagonal() {
-        boolean diagonal = table[0][0] == table[1][1] && table[1][1] == table[2][2];
-        boolean players = table[0][0] == firstPlayer || table[0][0] == secondPlayer;
+        boolean diagonal = board.getCell(0,0) == board.getCell(1,1) &&
+                board.getCell(1,1) == board.getCell(2,2);
+        boolean players = board.getCell(0,0) == firstPlayer ||
+                board.getCell(0,0) == secondPlayer;
         return diagonal && players;
     }
 
     private boolean isWinningPlayBottomDiagonal() {
-        boolean diagonal = table[0][2] == table[1][1] && table[1][1] == table[2][0];
-        boolean players = table[2][0] == firstPlayer || table[2][0] == secondPlayer;
+        boolean diagonal = board.getCell(0,2) == board.getCell(1,1) &&
+                board.getCell(1,1) == board.getCell(2,0);
+        boolean players = board.getCell(2,0) == firstPlayer || board.getCell(0,2) == secondPlayer;
         return diagonal && players;
     }
 

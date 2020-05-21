@@ -8,10 +8,14 @@ import static org.junit.Assert.assertEquals;
 public class TicTacToeTest {
 
     private TicTacToe ticTacToe;
+    private Board vectorBoard;
+    private Board matrixBoard;
 
     @Before
     public void init() {
-        ticTacToe = new TicTacToe();
+        vectorBoard = new VectorBoard();
+        matrixBoard = new MatrixBoard();
+        ticTacToe = new TicTacToe(matrixBoard);
     }
 
     @Test
