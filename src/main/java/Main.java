@@ -1,13 +1,16 @@
+import model.Markable;
+import model.MatrixBoard;
+
 public class Main {
     static TicTacToe ticTacToe;
-    static Board board;
+    static Markable markable;
     static int[][] tiedGame = { {0, 0}, {0, 1}, {1, 1}, {2, 2}, {1, 2}, {1, 0}, {2, 0}, {0, 2}, {2, 1}};
     static int[][] winXGame = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}};
     static int[][] winOGame = { {1, 0}, {0, 0}, {1, 1}, {0, 1}, {2, 2}, {0, 2}};
 
     public static void main(String[] args) {
-        board = new MatrixBoard();
-        ticTacToe = new TicTacToe(board);
+        markable = new MatrixBoard();
+        ticTacToe = new TicTacToe(markable);
         int[][] aux = tiedGame;
         for (int i = 0; i < aux.length; i++) {
             if (!ticTacToe.isFinished()) {

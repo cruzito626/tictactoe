@@ -1,4 +1,6 @@
-public interface Board {
+package model;
+
+public interface Markable {
     int SIZE = 3;
     int ZERO = 0;
     boolean markCell(int row, int col, char playerSymbol);

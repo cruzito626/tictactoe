@@ -1,18 +1,20 @@
+import model.Markable;
+
 public class TicTacToe {
     private char firstPlayer;
     private char secondPlayer;
     private char lastPlayer;
     private char loser;
     private char winner;
-    private Board board;
+    private Markable board;
     private int availableShifts;
     private boolean finished;
 
 
-    public TicTacToe(Board board) {
+    public TicTacToe(Markable markable) {
         this.firstPlayer = 'X';
         this.secondPlayer = 'O';
-        this.board = board;
+        this.board = markable;
         initializeGame();
     }
 
@@ -30,7 +32,7 @@ public class TicTacToe {
         availableShifts = 9;
     }
 
-    public Board getBoard() {
+    public Markable getBoard() {
         return board;
     }
 

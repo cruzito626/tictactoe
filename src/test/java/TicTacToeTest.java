@@ -1,3 +1,6 @@
+import model.Markable;
+import model.MatrixBoard;
+import model.VectorBoard;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,14 +11,14 @@ import static org.junit.Assert.assertEquals;
 public class TicTacToeTest {
 
     private TicTacToe ticTacToe;
-    private Board vectorBoard;
-    private Board matrixBoard;
+    private Markable vectorMarkable;
+    private Markable matrixMarkable;
 
     @Before
     public void init() {
-        vectorBoard = new VectorBoard();
-        matrixBoard = new MatrixBoard();
-        ticTacToe = new TicTacToe(matrixBoard);
+        vectorMarkable = new VectorBoard();
+        matrixMarkable = new MatrixBoard();
+        ticTacToe = new TicTacToe(matrixMarkable);
     }
 
     @Test

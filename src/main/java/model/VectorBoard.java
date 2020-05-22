@@ -1,6 +1,6 @@
-import java.util.Arrays;
+package model;
 
-public class VectorBoard implements Board {
+public class VectorBoard extends Board {
     private char [] board;
 
     public VectorBoard() {
@@ -12,28 +12,6 @@ public class VectorBoard implements Board {
         for (int i = 0; i < board.length; i++) {
             board[i] = ' ';
         }
-    }
-
-    //codigo repetido
-    @Override
-    public boolean markCell(int row, int col, char playerSymbol) {
-        if (isValidMarkCell(row, col)) {
-            setCell(row, col, playerSymbol);
-            return true;
-        }
-        return false;
-    }
-
-    //codigo repetido
-    @Override
-    public boolean isValidMarkCell(int row, int col) {
-        if (row >= ZERO && col >= ZERO &&
-            row < SIZE && col < SIZE) {
-            if (getCell(row, col) == ' ') {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
