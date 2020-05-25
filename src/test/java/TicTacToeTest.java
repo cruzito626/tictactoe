@@ -1,5 +1,6 @@
 import model.Markable;
 import model.MatrixBoard;
+import model.TicTacToe;
 import model.VectorBoard;
 import org.junit.Before;
 import org.junit.Test;

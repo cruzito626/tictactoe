@@ -1,3 +1,5 @@
+package model;
+
 import model.Markable;
 
 public class TicTacToe {
@@ -8,19 +10,24 @@ public class TicTacToe {
     private char winner;
     private Markable board;
     private int availableShifts;
-    private boolean finished;
 
 
-    public TicTacToe(Markable markable) {
+    public TicTacToe(Markable board) {
         this.firstPlayer = 'X';
         this.secondPlayer = 'O';
-        this.board = markable;
+        this.board = board;
         initializeGame();
     }
 
-    public TicTacToe(char firstPlayer, char secondPlayer) {
+    public TicTacToe(char firstPlayer, char secondPlayer, Markable board) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
+        this.board = board;
+        initializeGame();
+    }
+
+    public void restart() {
+        board.clear();
         initializeGame();
     }
 
@@ -28,16 +35,12 @@ public class TicTacToe {
         winner = ' ';
         loser = ' ';
         lastPlayer = ' ';
-        finished = false;
         availableShifts = 9;
     }
 
-    public Markable getBoard() {
-        return board;
-    }
 
     public boolean isFinished() {
-        return finished;
+        return (isWinningPlay() || availableShifts == 0);
     }
 
     public char getWinner() {
@@ -48,31 +51,36 @@ public class TicTacToe {
         return loser;
     }
 
+    public char getCell(int row, int col) {
+        return board.getCell(row, col);
+    }
+
     public boolean markCell(int row, int col) {
         boolean marked;
         char player;
         marked = false;
         player = playerTurn();
 
-        if (board.isValidMarkCell(row, col) && !isFinished()) {
-            board.markCell(row, col, player);
-            availableShifts--;
-            marked = true;
-            if(isWinningPlay() || availableShifts == 0) {
-                if (isWinningPlay()) {
-                    winner = player;
-                    loser = lastPlayer;
-                }
-                finished = true;
+        if (!isFinished()) {
+            if (board.markCell(row, col, player)) {
+                marked = true;
+                endOfShift(player);
             }
-            lastPlayer = player;
         }
         return marked;
     }
 
-    private boolean isWinningPlayVertical() {
-        for (int col = 0; col < board.SIZE; col++) {
+    private void endOfShift(char player) {
+        availableShifts--;
+        if (isWinningPlay()) {
+            winner = player;
+            loser = lastPlayer;
+        }
+        lastPlayer = player;
+    }
 
+    private boolean isWinningPlayVertical() {
+        for (int col = 0; col < board.SIZE_ROW; col++) {
             if (board.getCell(0,col) == board.getCell(1,col) &&
                     board.getCell(2,col)== board.getCell(1,col)) {
 
@@ -86,7 +94,7 @@ public class TicTacToe {
     }
 
     private boolean isWinningPlayHorizontal() {
-        for (int row = 0; row < board.SIZE; row++) {
+        for (int row = 0; row < board.SIZE_COL; row++) {
             if (board.getCell(row,0) == board.getCell(row, 1) &&
                     board.getCell(row, 2) == board.getCell(row, 1)) {
                 if (board.getCell(row,0) == firstPlayer ||

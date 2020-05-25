@@ -1,17 +1,37 @@
 import model.Markable;
 import model.MatrixBoard;
+import model.TicTacToe;
+import model.VectorBoard;
+import view.Console;
 
 public class Main {
     static TicTacToe ticTacToe;
-    static Markable markable;
+    static Markable board;
+    static Console console;
     static int[][] tiedGame = { {0, 0}, {0, 1}, {1, 1}, {2, 2}, {1, 2}, {1, 0}, {2, 0}, {0, 2}, {2, 1}};
     static int[][] winXGame = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}};
     static int[][] winOGame = { {1, 0}, {0, 0}, {1, 1}, {0, 1}, {2, 2}, {0, 2}};
 
     public static void main(String[] args) {
-        markable = new MatrixBoard();
-        ticTacToe = new TicTacToe(markable);
-        int[][] aux = tiedGame;
+        board = new VectorBoard();
+        ticTacToe = new TicTacToe(board);
+        console = new Console(ticTacToe);
+        console.run();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*int[][] aux = tiedGame;
         for (int i = 0; i < aux.length; i++) {
             if (!ticTacToe.isFinished()) {
                 System.out.printf("Player: %c%n", ticTacToe.playerTurn());
@@ -19,13 +39,11 @@ public class Main {
             } else {
                 break;
             }
-            System.out.print(ticTacToe.getBoard());
+            //System.out.print(ticTacToe.getBoard());
         }
         if (ticTacToe.isWinningPlay()) {
             System.out.printf("Winner player: %c%n", ticTacToe.getWinner());
             System.out.printf("Loser player: %c%n", ticTacToe.getLoser());
         } else {
             System.out.println("Game tied");
-        }
-    }
-}
+        }*/

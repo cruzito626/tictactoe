@@ -7,33 +7,23 @@ public class VectorBoard extends Board {
         initializeBoard();
     }
 
-    public void initializeBoard() {
-        board = new char[SIZE * SIZE];
-        for (int i = 0; i < board.length; i++) {
-            board[i] = ' ';
-        }
+    private void initializeBoard() {
+        board = new char[SIZE_ROW * SIZE_COL];
+        clear();
+    }
+
+    private int calculatePosition(int row, int col) {
+        return SIZE_COL * row + col;
     }
 
     @Override
-    public void setCell(int row, int col, char playerSymbol) {
-        board[SIZE * row + col] = playerSymbol;
+    public void setCell(int row, int col, char symbol) {
+        board[calculatePosition( row, col)] = symbol;
     }
 
     @Override
     public char getCell(int row, int col) {
-        return board[SIZE * row + col];
+        return board[calculatePosition( row, col)];
     }
 
-    //codigo repetido
-    @Override
-    public String toString() {
-        StringBuilder string = new StringBuilder();
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
-                string.append("["+getCell(row,col)+"]");
-            }
-            string.append("\n");
-        }
-        return string.toString();
-    }
 }
