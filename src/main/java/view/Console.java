@@ -1,24 +1,22 @@
 package view;
 
-import model.MatrixBoard;
+import model.ITicTacToe;
 import model.TicTacToe;
 
 import java.util.Scanner;
 
 public class Console implements Gui {
 
-    private TicTacToe game;
+    private ITicTacToe game;
     final static int NEW = 1;
     final static int CONTINUE = 2;
     final static int EXIT = 3;
 
-    public Console(TicTacToe game) {
+    public Console(ITicTacToe game) {
         this.game = game;
     }
 
-    public Console() {
-        this.game = new TicTacToe(new MatrixBoard());
-    }
+    public Console() {}
 
     @Override
     public void run() {
@@ -31,29 +29,27 @@ public class Console implements Gui {
         while (opcion != EXIT) {
             switch (opcion) {
                 case NEW:
-                    game.restart();
+                    setGame(new TicTacToe());
                     drawBoard();
                     showOptions();
                     break;
                 case CONTINUE:
                     int row, col;
-                    showTurnPlayer();
+                    //showTurnPlayer();
                     drawBoard();
-                    if (!game.isFinished()) {
+
+                    if (game.draw()) {
+                        System.out.println("Empate");
+                    } else if (game.checkTicTacToe()) {
+                        System.out.printf("Ganador: %c%n", game.winner());
+                    } else {
                         do {
                             row =  readPosition();
                             col =  readPosition();
-                        } while (!game.markCell(row,col));
+                        } while (!game.markMove(row,col));
                         drawBoard();
                     }
-                    if (game.isFinished()) {
-                        if (game.isWinningPlay()) {
-                            System.out.printf("Ganador: %c%n", game.getWinner());
-                            System.out.printf("Perdedor: %c%n", game.getLoser());
-                        } else {
-                            System.out.println("Empate");
-                        }
-                    }
+
                     showOptions();
                     break;
             }
@@ -61,10 +57,15 @@ public class Console implements Gui {
         }
     }
 
+    public void setGame(ITicTacToe game) {
+        this.game = game;
+    }
+
     private void drawBoard() {
-        System.out.printf("%C|%C|%C\n", game.getCell(0,0), game.getCell(0,1), game.getCell(0,2));
-        System.out.printf("%C|%C|%C\n", game.getCell(1,0), game.getCell(1,1), game.getCell(1,2));
-        System.out.printf("%C|%C|%C\n", game.getCell(2,0), game.getCell(2,1), game.getCell(2,2));
+        char [][] board = game.getBoard();
+        System.out.printf("%C|%C|%C\n", board[0][0], board[0][1], board[0][2]);
+        System.out.printf("%C|%C|%C\n", board[1][0], board[1][1], board[1][2]);
+        System.out.printf("%C|%C|%C\n", board[2][0], board[2][1], board[2][2]);
     }
 
     private void showOptions() {
@@ -77,16 +78,18 @@ public class Console implements Gui {
     }
 
     public void showError(String error){
-        System.out.printf("Error de %s%n", error);
+        System.err.printf("Error de %s%n", error);
     }
 
     public void showInput(String message) {
         System.out.printf("Ingrese %s:", message);
     }
 
+/*
     public void showTurnPlayer() {
         System.out.printf("Turno de jugador %C%n", game.playerTurn());
     }
+*/
 
     private int readNumber(String message) {
         showInput(message);

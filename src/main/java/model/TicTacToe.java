@@ -1,68 +1,49 @@
 package model;
+import static model.Symbol.X;
+import static model.Symbol.O;
+import static model.Symbol.Empty;
 
-import model.Markable;
+public class TicTacToe implements ITicTacToe {
+    static final int SIZE_ROW = 3;
+    static final int SIZE_COLUMN = 3;
+    static final int ZERO = 0;
 
-public class TicTacToe {
-    private char firstPlayer;
-    private char secondPlayer;
-    private char lastPlayer;
-    private char loser;
-    private char winner;
-    private Markable board;
+    private Symbol firstPlayer;
+    private Symbol secondPlayer;
+    private Symbol lastPlayer;
+    private Symbol winner;
+    private Symbol[][] board;
     private int availableShifts;
 
 
-    public TicTacToe(Markable board) {
-        this.firstPlayer = 'X';
-        this.secondPlayer = 'O';
-        this.board = board;
-        initializeGame();
-    }
-
-    public TicTacToe(char firstPlayer, char secondPlayer, Markable board) {
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
-        this.board = board;
-        initializeGame();
-    }
-
-    public void restart() {
-        board.clear();
-        initializeGame();
-    }
-
-    private void initializeGame(){
-        winner = ' ';
-        loser = ' ';
-        lastPlayer = ' ';
+    public TicTacToe() {
+        board = new Symbol[SIZE_ROW][SIZE_COLUMN];
+        this.firstPlayer = X;
+        this.secondPlayer = O;
+        winner = Empty;
+        lastPlayer = Empty;
         availableShifts = 9;
+        create();
     }
 
-
-    public boolean isFinished() {
-        return (isWinningPlay() || availableShifts == 0);
+    @Override
+    public void create() {
+        for (int row = 0; row < SIZE_ROW; row++) {
+            for (int column = 0; column < SIZE_COLUMN; column++) {
+                setCell(row, column, Empty);
+            }
+        }
     }
 
-    public char getWinner() {
-        return winner;
-    }
-
-    public char getLoser() {
-        return loser;
-    }
-
-    public char getCell(int row, int col) {
-        return board.getCell(row, col);
-    }
-
-    public boolean markCell(int row, int col) {
+    @Override
+    public boolean markMove(int row, int column) {
         boolean marked;
-        char player;
+        Symbol player;
         marked = false;
         player = playerTurn();
-
-        if (!isFinished()) {
-            if (board.markCell(row, col, player)) {
+        if (!draw() && !checkTicTacToe()) {
+            if (isValid(row, column)) {
+                setCell(row, column, player);
                 marked = true;
                 endOfShift(player);
             }
@@ -70,66 +51,98 @@ public class TicTacToe {
         return marked;
     }
 
-    private void endOfShift(char player) {
-        availableShifts--;
-        if (isWinningPlay()) {
-            winner = player;
-            loser = lastPlayer;
-        }
-        lastPlayer = player;
+    @Override
+    public boolean checkTicTacToe() {
+        return checkTicTacToeColumn() || checkTicTacToeRow() || checkTicTacToeDiagonal();
     }
 
-    private boolean isWinningPlayVertical() {
-        for (int col = 0; col < board.SIZE_ROW; col++) {
-            if (board.getCell(0,col) == board.getCell(1,col) &&
-                    board.getCell(2,col)== board.getCell(1,col)) {
+    @Override
+    public char winner() {
+        return winner.toChar();
+    }
 
-                if (board.getCell(0,col) == firstPlayer ||
-                        board.getCell(0,col) == secondPlayer) {
-                    return true;
-                }
+    @Override
+    public boolean draw() {
+        return availableShifts == 0;
+    }
+
+    @Override
+    public char[][] getBoard() {
+        char[][] board = new char[SIZE_ROW][SIZE_COLUMN];
+        for (int row = 0; row < SIZE_ROW; row++) {
+            for (int column = 0; column < SIZE_COLUMN; column++) {
+                board[row][column] = getCell(row, column).toChar();
             }
         }
-        return false;
+        return board;
     }
 
-    private boolean isWinningPlayHorizontal() {
-        for (int row = 0; row < board.SIZE_COL; row++) {
-            if (board.getCell(row,0) == board.getCell(row, 1) &&
-                    board.getCell(row, 2) == board.getCell(row, 1)) {
-                if (board.getCell(row,0) == firstPlayer ||
-                        board.getCell(row,0) == secondPlayer) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    private void setCell(int row, int column, Symbol symbol) {
+        board[row][column] = symbol;
     }
 
-    private boolean isWinningPlayUpperDiagonal() {
-        boolean diagonal = board.getCell(0,0) == board.getCell(1,1) &&
-                board.getCell(1,1) == board.getCell(2,2);
-        boolean players = board.getCell(0,0) == firstPlayer ||
-                board.getCell(0,0) == secondPlayer;
-        return diagonal && players;
-    }
-
-    private boolean isWinningPlayBottomDiagonal() {
-        boolean diagonal = board.getCell(0,2) == board.getCell(1,1) &&
-                board.getCell(1,1) == board.getCell(2,0);
-        boolean players = board.getCell(2,0) == firstPlayer || board.getCell(0,2) == secondPlayer;
-        return diagonal && players;
-    }
-
-    public boolean isWinningPlay() {
-        return isWinningPlayVertical() || isWinningPlayHorizontal() || isWinningPlayUpperDiagonal() || isWinningPlayBottomDiagonal();
-    }
-
-    public char playerTurn() {
-        if (lastPlayer == ' ' || lastPlayer == secondPlayer) {
+    private Symbol playerTurn() {
+        if (lastPlayer == Empty || lastPlayer == secondPlayer) {
             return firstPlayer;
         } else {
             return secondPlayer;
         }
     }
+
+    private boolean isValid(int row, int column) {
+        return inRange(row, ZERO, SIZE_ROW) && inRange(column, ZERO, SIZE_COLUMN) && isEmptyCell( row, column);
+    }
+
+    private Symbol getCell(int row, int column) {
+        return board[row][column];
+    }
+
+    private boolean isEmptyCell(int row, int column) {
+        return getCell(row, column) == Empty;
+    }
+
+    private boolean inRange(int number, int start, int end) {
+        return number >= start && number < end;
+    }
+
+    private void endOfShift(Symbol player) {
+        availableShifts--;
+        if (checkTicTacToe()) {
+            winner = player;
+        }
+        lastPlayer = player;
+    }
+
+    private boolean checkTicTacToeColumn() {
+        for (int column = 0; column < SIZE_ROW; column++) {
+            if (getCell(0,column) == getCell(1,column) && getCell(2,column) == getCell(1,column)) {
+                if (getCell(0,column) == firstPlayer || getCell(0,column) == secondPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkTicTacToeRow() {
+        for (int row = 0; row < SIZE_COLUMN; row++) {
+            if (getCell(row,0) == getCell(row, 1) && getCell(row, 2) == getCell(row, 1)) {
+                if (getCell(row,0) == firstPlayer || getCell(row,0) == secondPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkTicTacToeDiagonal() {
+        boolean firstDiagonal, secondDiagonal;
+        boolean players;
+        firstDiagonal = getCell(0,0) == getCell(1,1) && getCell(1,1) == getCell(2,2);
+        secondDiagonal = getCell(0,2) == getCell(1,1) && getCell(1,1) == getCell(2,0);
+        players = getCell(1,1) == firstPlayer || getCell(1,1) == secondPlayer;
+        return (firstDiagonal || secondDiagonal) && players;
+    }
+
+
 }

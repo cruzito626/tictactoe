@@ -1,20 +1,17 @@
-import model.Markable;
-import model.MatrixBoard;
+
+import model.ITicTacToe;
 import model.TicTacToe;
-import model.VectorBoard;
 import view.Console;
 
 public class Main {
-    static TicTacToe ticTacToe;
-    static Markable board;
+    static ITicTacToe ticTacToe;
     static Console console;
     static int[][] tiedGame = { {0, 0}, {0, 1}, {1, 1}, {2, 2}, {1, 2}, {1, 0}, {2, 0}, {0, 2}, {2, 1}};
     static int[][] winXGame = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}};
     static int[][] winOGame = { {1, 0}, {0, 0}, {1, 1}, {0, 1}, {2, 2}, {0, 2}};
 
     public static void main(String[] args) {
-        board = new VectorBoard();
-        ticTacToe = new TicTacToe(board);
+        ticTacToe = new TicTacToe();
         console = new Console(ticTacToe);
         console.run();
     }

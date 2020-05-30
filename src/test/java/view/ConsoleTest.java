@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class ConsoleTest {
-
     @Test
     public void validateNumber_numberGreaterThanRange_false() {
         Console console = new Console();
