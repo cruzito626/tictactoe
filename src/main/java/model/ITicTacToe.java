@@ -8,5 +8,5 @@ public interface ITicTacToe {
     char winner();              // devuelve 'X' cuando gana X, 'O' cuando gana 'O'
     boolean draw();             // devuelve true cuando hay empate false en caso contrario
     char[][] getBoard();        // devuelve en un arreglo el contenido de la tabla
-                                // la  tabla puede contener un 'X', un 'O' o ''
+                                // la  tabla puede contener un 'X', un 'O' o ' '
 }

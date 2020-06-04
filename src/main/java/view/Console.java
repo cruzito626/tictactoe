@@ -16,25 +16,23 @@ public class Console implements Gui {
         this.game = game;
     }
 
-    public Console() {}
-
     @Override
     public void run() {
-        int opcion;
+        int option;
 
         System.out.println("Inicio el juego");
         showOptions();
         drawBoard();
-        opcion = readOption();
-        while (opcion != EXIT) {
-            switch (opcion) {
+        option = readOption();
+        while (option != EXIT) {
+            switch (option) {
                 case NEW:
                     setGame(new TicTacToe());
-                    drawBoard();
                     showOptions();
+                    drawBoard();
                     break;
                 case CONTINUE:
-                    int row, col;
+                    int row, column;
                     //showTurnPlayer();
                     drawBoard();
 
@@ -45,19 +43,19 @@ public class Console implements Gui {
                     } else {
                         do {
                             row =  readPosition();
-                            col =  readPosition();
-                        } while (!game.markMove(row,col));
+                            column =  readPosition();
+                        } while (!game.markMove(row,column));
                         drawBoard();
                     }
 
                     showOptions();
                     break;
             }
-            opcion = readOption();
+            option = readOption();
         }
     }
 
-    public void setGame(ITicTacToe game) {
+    private void setGame(ITicTacToe game) {
         this.game = game;
     }
 
@@ -77,16 +75,16 @@ public class Console implements Gui {
         System.out.println("------------------");
     }
 
-    public void showError(String error){
-        System.err.printf("Error de %s%n", error);
+    private void showError(String error){
+        System.err.printf("%nError de %s%n", error);
     }
 
-    public void showInput(String message) {
+    private void showInput(String message) {
         System.out.printf("Ingrese %s:", message);
     }
 
 /*
-    public void showTurnPlayer() {
+    private void showTurnPlayer() {
         System.out.printf("Turno de jugador %C%n", game.playerTurn());
     }
 */
@@ -116,14 +114,13 @@ public class Console implements Gui {
         String coordinate = "coordenada";
         int option = readNumber(coordinate);
         if (!validateNumber(option,0,2)) {
-            showOptions();
             showError(coordinate);
             readPosition();
         }
         return option;
     }
 
-    public boolean validateNumber(int option, int start, int end) {
+    private boolean validateNumber(int option, int start, int end) {
         return option >= start && option <= end;
     }
 }

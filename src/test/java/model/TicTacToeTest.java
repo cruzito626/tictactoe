@@ -3,9 +3,7 @@ package model;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TicTacToeTest {
 
@@ -17,28 +15,19 @@ public class TicTacToeTest {
     }
 
     @Test
-    public void markMove_emptyCell_true() {
+    public void markMoveEmptyCellTrueTest() {
         assertTrue(ticTacToe.markMove(1, 2));
     }
 
     @Test
-    public void markMove_markedCell_false() {
+    public void markMoveMarkedCellFalseTest() {
         ticTacToe.markMove(1, 2);
         assertFalse(ticTacToe.markMove(1, 2));
     }
 
     @Test
-    public void markMove_tiedGame_false() {
-        ticTacToe.markMove(0, 0);
-        ticTacToe.markMove(0, 1);
-        ticTacToe.markMove(1, 1);
-        ticTacToe.markMove(2, 2);
-        ticTacToe.markMove(1, 2);
-        ticTacToe.markMove(1, 0);
-        ticTacToe.markMove(2, 0);
-        ticTacToe.markMove(0, 2);
-        ticTacToe.markMove(2, 1);
-        assertFalse(ticTacToe.markMove(1, 2));
+    public void markMoveInvalidPositionFalseTest() {
+        assertFalse(ticTacToe.markMove(7, -1));
     }
 
     /* X|O|
@@ -46,40 +35,7 @@ public class TicTacToeTest {
        X| |
     */
     @Test
-    public void markMove_winningGame_false() {
-        ticTacToe.markMove(0, 0);
-        ticTacToe.markMove(0, 1);
-        ticTacToe.markMove(1, 0);
-        ticTacToe.markMove(1, 1);
-        ticTacToe.markMove(2, 0);
-        assertFalse(ticTacToe.markMove(2, 1));
-    }
-
-    @Test
-    public void draw_gameStarted_false() {
-        assertFalse(ticTacToe.draw());
-    }
-
-    @Test
-    public void draw_tiedGame_true() {
-        ticTacToe.markMove(0, 0);
-        ticTacToe.markMove(0, 1);
-        ticTacToe.markMove(1, 1);
-        ticTacToe.markMove(2, 2);
-        ticTacToe.markMove(1, 2);
-        ticTacToe.markMove(1, 0);
-        ticTacToe.markMove(2, 0);
-        ticTacToe.markMove(0, 2);
-        ticTacToe.markMove(2, 1);
-        assertTrue(ticTacToe.draw());
-    }
-
-    /* X|O|
-       X|O|
-       X| |
-    */
-    @Test
-    public void checkTicTacToe_wonGameVerticalLine_true() {
+    public void checkTicTacToeWonGameVerticalLineTrueTest() {
         ticTacToe.markMove(0, 0);
         ticTacToe.markMove(0, 1);
         ticTacToe.markMove(1, 0);
@@ -94,7 +50,7 @@ public class TicTacToeTest {
         | |
     */
     @Test
-    public void checkTicTacToe_wonGameHorizontalLine_true() {
+    public void checkTicTacToeWonGameHorizontalLineTrueTest() {
         ticTacToe.markMove(0, 0);
         ticTacToe.markMove(1, 0);
         ticTacToe.markMove(0, 1);
@@ -109,7 +65,7 @@ public class TicTacToeTest {
         | |X
     */
     @Test
-    public void checkTicTacToe_wonGameFirstDiagonalLine_true() {
+    public void checkTicTacToeWonGameFirstDiagonalLineTrueTest() {
         ticTacToe.markMove(0, 0);
         ticTacToe.markMove(1, 0);
         ticTacToe.markMove(1, 1);
@@ -124,7 +80,7 @@ public class TicTacToeTest {
         X| |
     */
     @Test
-    public void checkTicTacToe_wonGameSecondDiagonalLine_true() {
+    public void checkTicTacToeWonGameSecondDiagonalLineTrue() {
         ticTacToe.markMove(2, 0);
         ticTacToe.markMove(1, 0);
         ticTacToe.markMove(1, 1);
@@ -134,12 +90,26 @@ public class TicTacToeTest {
         assertTrue(ticTacToe.checkTicTacToe());
     }
 
+    @Test
+    public void checkTicTacToeGameIsDrawFalseTest() {
+        ticTacToe.markMove(0, 0);
+        ticTacToe.markMove(0, 1);
+        ticTacToe.markMove(1, 1);
+        ticTacToe.markMove(2, 2);
+        ticTacToe.markMove(1, 2);
+        ticTacToe.markMove(1, 0);
+        ticTacToe.markMove(2, 0);
+        ticTacToe.markMove(0, 2);
+        ticTacToe.markMove(2, 1);
+        assertFalse(ticTacToe.checkTicTacToe());
+    }
+
     /* X|O|
        X|O|
        X| |
     */
     @Test
-    public void winner_wonGameVerticalLine_X() {
+    public void winnerWonGameVerticalLineXTest() {
         char winner = 'X';
         ticTacToe.markMove(0, 0);
         ticTacToe.markMove(0, 1);
@@ -155,7 +125,7 @@ public class TicTacToeTest {
         | |X
      */
     @Test
-    public void winner_wonGameHorizontalLine_O() {
+    public void winnerWonGameHorizontalLineOTest() {
 
         char winner = 'O';
         ticTacToe.markMove(1, 0);
@@ -166,5 +136,30 @@ public class TicTacToeTest {
         ticTacToe.markMove(0, 2);
 
         assertEquals(winner, ticTacToe.winner());
+    }
+
+    @Test
+    public void drawGameStartedFalseTest() {
+        assertFalse(ticTacToe.draw());
+    }
+
+    @Test
+    public void drawTiedGameTrueTest() {
+        ticTacToe.markMove(0, 0);
+        ticTacToe.markMove(0, 1);
+        ticTacToe.markMove(1, 1);
+        ticTacToe.markMove(2, 2);
+        ticTacToe.markMove(1, 2);
+        ticTacToe.markMove(1, 0);
+        ticTacToe.markMove(2, 0);
+        ticTacToe.markMove(0, 2);
+        ticTacToe.markMove(2, 1);
+        assertTrue(ticTacToe.draw());
+    }
+
+    @Test
+    public void getBoardStartGameEmptyMatrixTest() {
+        char[][] board = {{' ',' ',' '},{' ',' ',' '},{' ',' ',' '}};
+        assertArrayEquals(board, ticTacToe.getBoard());
     }
 }

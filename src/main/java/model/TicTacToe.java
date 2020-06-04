@@ -10,18 +10,16 @@ public class TicTacToe implements ITicTacToe {
 
     private Symbol firstPlayer;
     private Symbol secondPlayer;
-    private Symbol lastPlayer;
+    private Symbol turn;
     private Symbol winner;
-    private Symbol[][] board;
+    private Symbol[][] board = new Symbol[SIZE_ROW][SIZE_COLUMN];
     private int availableShifts;
 
-
     public TicTacToe() {
-        board = new Symbol[SIZE_ROW][SIZE_COLUMN];
         this.firstPlayer = X;
         this.secondPlayer = O;
         winner = Empty;
-        lastPlayer = Empty;
+        turn = O;
         availableShifts = 9;
         create();
     }
@@ -40,13 +38,11 @@ public class TicTacToe implements ITicTacToe {
         boolean marked;
         Symbol player;
         marked = false;
-        player = playerTurn();
-        if (!draw() && !checkTicTacToe()) {
-            if (isValid(row, column)) {
-                setCell(row, column, player);
-                marked = true;
-                endOfShift(player);
-            }
+        player = getTurn();
+        if (isValid(row, column)) {
+            setCell(row, column, player);
+            marked = true;
+            endOfShift(player);
         }
         return marked;
     }
@@ -81,8 +77,8 @@ public class TicTacToe implements ITicTacToe {
         board[row][column] = symbol;
     }
 
-    private Symbol playerTurn() {
-        if (lastPlayer == Empty || lastPlayer == secondPlayer) {
+    private Symbol getTurn() {
+        if (turn == Empty || turn == secondPlayer) {
             return firstPlayer;
         } else {
             return secondPlayer;
@@ -110,7 +106,7 @@ public class TicTacToe implements ITicTacToe {
         if (checkTicTacToe()) {
             winner = player;
         }
-        lastPlayer = player;
+        turn = player;
     }
 
     private boolean checkTicTacToeColumn() {
@@ -125,7 +121,7 @@ public class TicTacToe implements ITicTacToe {
     }
 
     private boolean checkTicTacToeRow() {
-        for (int row = 0; row < SIZE_COLUMN; row++) {
+        for (int row = 0; row < SIZE_ROW; row++) {
             if (getCell(row,0) == getCell(row, 1) && getCell(row, 2) == getCell(row, 1)) {
                 if (getCell(row,0) == firstPlayer || getCell(row,0) == secondPlayer) {
                     return true;
@@ -138,11 +134,10 @@ public class TicTacToe implements ITicTacToe {
     private boolean checkTicTacToeDiagonal() {
         boolean firstDiagonal, secondDiagonal;
         boolean players;
-        firstDiagonal = getCell(0,0) == getCell(1,1) && getCell(1,1) == getCell(2,2);
-        secondDiagonal = getCell(0,2) == getCell(1,1) && getCell(1,1) == getCell(2,0);
+        Symbol centerCell = getCell(1,1);
+        firstDiagonal = getCell(0,0) == centerCell && centerCell == getCell(2,2);
+        secondDiagonal = getCell(0,2) == centerCell && centerCell == getCell(2,0);
         players = getCell(1,1) == firstPlayer || getCell(1,1) == secondPlayer;
         return (firstDiagonal || secondDiagonal) && players;
     }
-
-
 }
